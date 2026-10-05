@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>SHV Editable Order Form</title>
+<style>
+  :root{
+    --ink:#5f5f5f;
+    --grid:#8b8b8b;
+    --accent:#a73338;
+    --green:#8db64b;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    background:#ececec;
+    font-family:Arial Narrow, Helvetica, sans-serif;
+    color:var(--ink);
+  }
+  .toolbar{
+    width:210mm;
+    max-width:100%;
+    margin:16px auto 0;
+    display:flex;
+    gap:8px;
+    justify-content:flex-end;
+    padding:0 4px;
+  }
+  .toolbar button{
+    border:1px solid #999;
+    background:white;
+    padding:8px 12px;
+    border-radius:5px;
+    cursor:pointer;
+    font-size:13px;
+  }
+  .sheet{
+    width:210mm;
+    min-height:297mm;
+    margin:10px auto 24px;
+    background:white;
+    padding:7mm 7mm 6mm;
+    box-shadow:0 2px 14px rgba(0,0,0,.12);
+  }
+  .top{
+    display:grid;
+    grid-template-columns: 1.15fr .9fr;
+    gap:8mm;
+    align-items:start;
+  }
+  .brand-wrap{
+    display:flex;
+    align-items:flex-start;
+    gap:4mm;
+  }
+  .logo{
+    width:20mm;
+    height:11mm;
+    background:var(--accent);
+    color:#fff;
+    border-radius:1mm;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    padding-left:2.7mm;
+    line-height:1;
+  }
+  .logo .big{font-size:18px;font-weight:700;letter-spacing:.3px}
+  .logo .small{font-size:6px;margin-top:1px}
+  .stripes{width:7mm;padding-top:1mm}
+  .stripes div{height:1.4mm;background:var(--green);margin-bottom:1.2mm}
+  .contact{
+    font-size:8.5px;
+    line-height:1.35;
+    margin-top:-1px;
+  }
+  .abn{font-size:6.5px;margin-top:1.5mm}
+  .field-row{
+    display:grid;
+    grid-template-columns:auto 1fr;
+    gap:2mm;
+    align-items:end;
+    margin-bottom:2mm;
+    font-size:10px;
+    font-weight:700;
+  }
+  .field-row.inline{
+    grid-template-columns:auto 28mm auto 1fr;
+    gap:2mm;
+  }
+  input.line, textarea.line{
+    border:0;
+    border-bottom:1px solid #aaa;
+    outline:none;
+    font:inherit;
+    color:#222;
+    padding:1mm 1mm .7mm;
+    background:transparent;
+    width:100%;
+  }
+  textarea.line{resize:none;height:7mm}
+  .checks{
+    display:grid;
+    grid-template-columns:auto 7mm 13mm auto 7mm 22mm auto 1fr;
+    gap:2mm;
+    align-items:center;
+    font-size:10px;
+    font-weight:700;
+    margin-top:2mm;
+  }
+  .box{
+    width:6mm;height:6mm;border:1px solid #999;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .box input{width:100%;height:100%;margin:0}
+  .special{
+    display:grid;
+    grid-template-columns:auto 1fr;
+    gap:3mm;
+    align-items:center;
+    margin-top:2.2mm;
+    font-size:10px;
+    font-weight:700;
+  }
+  .special input{
+    height:7mm;border:1px solid #bbb;padding:1mm 2mm;width:100%;
+  }
+
+  .groups{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:2mm;
+    margin-top:3mm;
+  }
+  table{
+    width:100%;
+    border-collapse:collapse;
+    table-layout:fixed;
+    font-size:7px;
+  }
+  th,td{
+    border:1px solid var(--grid);
+    padding:0;
+    height:3.7mm;
+    vertical-align:middle;
+  }
+  th{
+    font-weight:700;
+    text-align:center;
+    height:6.0mm;
+  }
+  th.product{font-size:8px;text-align:center;padding-left:1.4mm}
+  .c1{width:5mm}.c2{width:6mm}.c3{width:7mm}.c4{width:8mm}
+  td.product{
+    padding-left:1.4mm;
+    padding-right:.6mm;
+    font-size:6.6px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:clip;
+  }
+  td input.qty{
+    width:100%;
+    height:100%;
+    border:0;
+    outline:none;
+    text-align:center;
+    font-size:8px;
+    background:transparent;
+  }
+  .herb-title{
+    font-weight:700;
+    font-size:8px;
+    padding-left:1.4mm;
+    background:#fff;
+  }
+  @media print{
+    body{background:#fff}
+    .toolbar{display:none}
+    .sheet{box-shadow:none;margin:0;width:210mm;min-height:297mm}
+  }
+</style>
+</head>
+<body>
+<div class="toolbar">
+  <button onclick="window.print()">Print / Save PDF</button>
+  <button onclick="clearForm()">Clear entries</button>
+</div>
+
+<div class="sheet">
+  <div class="top">
+    <div>
+      <div class="brand-wrap">
+        <div class="logo"><div class="big">SHV</div><div class="small">wholesalers</div></div>
+        <div class="stripes"><div></div><div></div><div></div></div>
+        <div class="contact">
+          10 Tasma Street, North Hobart TAS 7000<br>
+          P.O. Box 87, Hobart TAS 7001<br>
+          Phone: 03 6234 3754 &nbsp;&nbsp; Fax: 03 6231 1716<br>
+          Email: orders@shvwholesalers.com.au<br>
+          accounts@shvwholesalers.com.au
+        </div>
+      </div>
+      <div class="abn">ABN 45 009 197 413</div>
+    </div>
+
+    <div>
+      <div class="field-row"><span>CUSTOMER</span><input class="line" name="customer" value="Farah&#39;s IGA Cygnet"></div>
+      <div class="field-row inline">
+        <span>DATE</span><input class="line" name="date" id="orderDate">
+        <span>PACKED BY</span><input class="line" name="packed_by">
+      </div>
+    </div>
+  </div>
+
+  <div class="checks">
+    <span>PICK UP</span><span class="box"><input type="checkbox" name="pickup"></span><span></span>
+    <span>DELIVERY</span><span class="box"><input type="checkbox" name="delivery"></span><span></span>
+    <span>TIME REQUIRED</span><input class="line" name="time_required">
+  </div>
+
+  <div class="special">
+    <span>SPECIAL INSTRUCTIONS</span>
+    <input type="text" name="special_instructions">
+  </div>
+
+  <div class="groups" id="groups"></div>
+</div>
+
+<script>
+const fruits = [
+"APPLES - FUJI CTN","APPLES - GOLDEN DELICIOUS CTN","APPLES - GRANNY SMITH CTN","APPLES - GALA CTN",
+"APRICOTS - CTN","AVOCADOES - CTN","AVOCADOES - TRAY","BANANAS - LGE CTN","BANANAS - PREMIUM CTN",
+"BLACKBERRIES - TRAY","BLUEBERRIES - TRAY","CHERRIES - CTN","COCONUTS - BAG","DATES - CTN","FIGS - TRAY",
+"GRAPEFRUIT - MARSH CTN","GRAPEFRUIT - RUBY CTN","GRAPES - GREEN CTN","GRAPES - RED CTN","HONEYDEW - CTN",
+"KIWIFRUIT - CTN","LEMONS - CTN","LIMES - CTN","MANDARINS - BIN","MANDARINS - CTN","MANGOES - CTN",
+"MANGOES - TRAY","NECTARINES - WHITE CTN","NECTARINES - YELLOW CTN","ORANGES - BLOOD CTN",
+"ORANGES - NAVEL 3KG BAG","ORANGES - NAVEL CTN","ORANGES - VALENCIA 3KG BAG","ORANGES - VALENCIA CTN",
+"PASSIONFRUIT - CTN","PAWPAW - CTN","PEACHES - WHITE CTN","PEACHES - YELLOW CTN","PEARS - BIN",
+"PEARS - BUERRE BOSC CTN","PEARS - COMICE CTN","PEARS - JOSEPHINE CTN","PEARS - NASHI TRAY",
+"PEARS - PACKHAM CTN","PEARS - WINTERCOLE CTN","PEAS","PINEAPPLES - SMOOTHLEAF CTN",
+"PINEAPPLES - TOPLESS CTN","PERSIMMONS - TRAY","PLUMS - CTN","POMEGRANATES - TRAY","RASPBERRIES - TRAY",
+"ROCKMELON - CTN","STRAWBERRIES - TRAY","TANGELOS - CTN","WATERMELON"
+];
+
+const veg1 = [
+"ALFALFA - 150GM PNT","ARTICHOKES - CTN","ASPARAGUS - CTN","BEANS - ROUND CTN","BEETROOT - BAG",
+"BITTERMELON - CTN","BOK CHOY - BABY DECK","BOK CHOY - DECK","BROCCOLI - CTN","BROCCOLINI - CTN",
+"BRUSSEL SPROUTS - CTN","CABBAGES - GREEN","CABBAGES - RED","CABBAGES - SAVOY","CAPSICUM - GREEN CTN",
+"CAPSICUM - RED CTN","CAPSICUM - YELLOW CTN","CARROTS - 10 x 2KG BAG","CARROTS - 20 x 1KG BAG",
+"CARROTS - LGE 20KG BAG","CARROTS - MED 20KG CTN","CARROTS - DUTCH CTN","CAULIFLOWERS","CELERY - CTN",
+"CELERIAC - CTN","CHILLIES - GREEN 3KG TRAY","CHILLIES - RED 3KG TRAY","CHILLIES -","CHOKOS - CTN",
+"CORN - BABY TRAY","CORN - SWEET TRAY","CUCUMBER - BITTER FREE BAG (15)","CUCUMBER - BITTER FREE TRAY (30)",
+"CUCUMBER - GREEN CTN","CUCUMBER - LEBANESE CTN","EGGPLANT - CTN","FENNEL - CTN",
+"GARDEN PEA SPROUTS - 130GM PNT","GARLIC PURPLE CTN","GARLIC WHITE 20 x 500GM CTN",
+"GARLIC WHITE PEELED 10 x 1KG CTN","GINGER - CTN","KALE","LEEKS - CTN","LETTUCE - COS CTN",
+"LETTUCE - COS BABY CTN","LETTUCE - ICEBERG CTN","LETTUCE - MEDITERRANEAN 6x120GM",
+"LETTUCE - MESCLUN 3x500GM CTN","LETTUCE - MESCLUN 6x120GM CTN","LETTUCE - RADICCHIO CTN",
+"LETTUCE - ROCKET 6x120GM CTN","LETTUCE - ROCKET WILD 3x500GM CTN","MUSHROOMS - BUTTON TRAY",
+"MUSHROOMS - ENOKI","MUSHROOMS - HONEY BROWN TRAY","MUSHROOMS - KING OYSTER","MUSHROOMS - OYSTER PNT",
+"MUSHROOMS - P/P TRAY","MUSHROOMS - SHITAKE PNT","OKRA - CTN","ONIONS - BROWN LGE 20KG BAG",
+"ONIONS - BROWN MED 20KG BAG","ONIONS - LGE #2 10KG BAG","ONIONS - MED 10KG BAG","ONIONS - BROWN 15KG BAG"
+];
+
+const veg2 = [
+"ONIONS - BROWN PICKLING 20KG BAG","ONIONS - RED BAG","ONIONS - SHALLOTS CTN","ONIONS - WHITE BAG",
+"PARSNIPS - 20x500GM BAG","PARSNIPS - CTN","PEAS - SNOW","PEAS - SUGARSNAP","POTATOES - BINTJE 10x2KG BAG",
+"POTATOES - BINTJE CT 15KG BAG","POTATOES - BINTJE MED 15KG BAG","POTATOES - BINTJE LGE 15KG BAG",
+"POTATOES - DUTCH CREAM 10KG BAG","POTATOES - KENNEBEC 10KG BAG","POTATOES - PINK EYE 20KG CTN",
+"PUMPKIN - BUTTERNUT CTN","PUMPKIN - GREY","PUMPKIN - KENT SPECIAL","RADISH - RED DECK","RADISH - WHITE BAG",
+"RHUBARB - CTN","SALAD SELECTION - 130GM PNT","SILVERBEET - CTN","SPINACH - BABY 3x500GM CTN",
+"SPINACH - BABY 6x150GM","SPRING ONIONS","SQUASH - YELLOW CTN","SWEDE - BAG","SWEET POTATOES - CTN",
+"SWEET POTATOES - RED CTN","TOMATOES - CHERRY TRAY","TOMATOES - SML CTN","TOMATOES - SALMED CTN",
+"TOMATOES - MED CTN","TOMATOES - ROMA CTN","TOMATOES - TRUSS CTN","TOMATOES - MEDLEY TRAY", "TOMATOES - PETITE  TRAY", "TURNIPS - BAG","WITLOF - CTN","WOMBOK - CTN","ZUCCHINI - CTN"
+];
+
+const herbs = [
+"BASIL - BUNCH","BAY LEAVES - BUNCH","CHIVES - BUNCH","CORIANDER - BUNCH","CURRY LEAVES - BUNCH",
+"DILL - BUNCH","ITALIAN PARSLEY - BUNCH","LEMONGRASS - 5 KG BAG","LIME LEAVES - BUNCH","MINT - BUNCH",
+"OREGANO - BUNCH","PARSLEY - BUNCH","ROSEMARY - BUNCH","SAGE - BUNCH","TARRAGON - BUNCH","THAI BASIL",
+"THYME - BUNCH","VIETNAMESE MINT"
+];
+
+function makeTable(title, items, herbsBlock=false){
+  const table = document.createElement('table');
+  const thead = document.createElement('thead');
+  thead.innerHTML = `
+    <tr>
+      <th class="c1">✓</th>
+      <th class="c2">UNIT</th>
+      <th class="c3">CTN<br>BAG</th>
+      <th class="c4">KG/SIZE<br>COUNT</th>
+      <th class="product">${title}</th>
+    </tr>`;
+  table.appendChild(thead);
+  const tbody = document.createElement('tbody');
+
+  function addRow(item, idx){
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><input class="qty" type="text" name="${title}_${idx}_tick"></td>
+      <td><input class="qty" type="text" name="${title}_${idx}_unit"></td>
+      <td><input class="qty" type="text" name="${title}_${idx}_ctn"></td>
+      <td><input class="qty" type="text" name="${title}_${idx}_size"></td>
+      <td class="product">${item}</td>`;
+    tbody.appendChild(tr);
+  }
+
+  items.forEach((x,i)=>addRow(x,i));
+
+  if(herbsBlock){
+    const trh = document.createElement('tr');
+    trh.innerHTML = `<td></td><td></td><td></td><td></td><td class="herb-title">HERBS</td>`;
+    tbody.appendChild(trh);
+    herbs.forEach((x,i)=>addRow(x,100+i));
+  }
+  table.appendChild(tbody);
+  return table;
+}
+
+const groups = document.getElementById('groups');
+groups.appendChild(makeTable('PRODUCT FRUITS', fruits));
+groups.appendChild(makeTable('PRODUCT VEGETABLES', veg1));
+groups.appendChild(makeTable('PRODUCT VEGETABLES', veg2, true));
+
+function clearForm(){
+  document.querySelectorAll('input').forEach(el=>{
+    if(el.type==='checkbox') el.checked=false;
+    else el.value='';
+  });
+}
+
+
+
+function setTomorrowDate(){
+  const d = new Date();
+  d.setDate(d.getDate() + 1);
+  const dd = String(d.getDate()).padStart(2,'0');
+  const mm = String(d.getMonth() + 1).padStart(2,'0');
+  const yyyy = d.getFullYear();
+  document.getElementById('orderDate').value = `${dd}/${mm}/${yyyy}`;
+}
+setTomorrowDate();
+
+</script>
+</body>
+</html>
